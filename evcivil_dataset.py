@@ -287,6 +287,42 @@ class EVCivilDetectionDataset(Dataset):
         )
 
 
+class EVCivilCumulativeDetectionDataset(EVCivilDetectionDataset):
+    """Event dataset encoding leaky membrane potential as thresholded spikes."""
+
+    decay = 0.3
+    event_weight = 0.8
+    v_th = 1.0
+
+    def _events_to_tensor(self, events: Dict[str, np.ndarray], t0: int, t1: int) -> torch.Tensor:
+        stimuli = np.zeros((self.T, 2, self.input_h, self.input_w), dtype=np.float32)
+
+        if len(events["t"]) == 0:
+            return torch.from_numpy(stimuli)
+
+        orig_w, orig_h = 346.0, 260.0
+        x = np.clip((events["x"] / orig_w) * self.input_w, 0, self.input_w - 1).astype(np.int64)
+        y = np.clip((events["y"] / orig_h) * self.input_h, 0, self.input_h - 1).astype(np.int64)
+        p = np.clip(events["p"], 0, 1).astype(np.int64)
+
+        denom = max(t1 - t0, 1)
+        tb = ((events["t"] - t0) / denom * self.T).astype(np.int64)
+        tb = np.clip(tb, 0, self.T - 1)
+
+        np.add.at(stimuli, (tb, p, y, x), self.event_weight)
+
+        membrane_potential = np.zeros_like(stimuli)
+        if self.T > 0:
+            membrane_potential[0] = stimuli[0]
+        for time_bin in range(1, self.T):
+            membrane_potential[time_bin] = (
+                self.decay * membrane_potential[time_bin - 1] + stimuli[time_bin]
+            )
+
+        spikes = (membrane_potential > self.v_th).astype(np.float32)
+        return torch.from_numpy(spikes)
+
+
 def detection_collate_fn(batch):
     images, targets = zip(*batch)
     images = torch.stack(images, dim=0)
