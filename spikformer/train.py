@@ -20,7 +20,8 @@ from torch.utils.tensorboard import SummaryWriter
 from spikingjelly.clock_driven import functional
 
 import utils
-from evcivil_dataset_loader import EVCivilDetectionDataset, detection_collate_yolox_fn
+from evcivil_dataset_loader import EVCivilDetectionDataset, detection_collate_yolox_fn, EVCivilCumulativeDetectionDataset
+
 from model import SpikformerYOLOXDetector
 
 import json
