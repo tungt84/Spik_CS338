@@ -863,7 +863,28 @@ def main(args):
             max_sequences=args.max_val_sequences,
             verbose=True,
         )
+    elif args.dataset == "evcivil-lif":
+        dataset_train = EVCivilCumulativeDetectionDataset(
+            root=args.data_path,
+            split="train",
+            T=args.T,
+            input_size=image_size,
+            window_ms=args.window_ms,
+            max_samples=args.max_train_samples,
+            max_sequences=args.max_train_sequences,
+            verbose=True,
+        )
 
+        dataset_val = EVCivilCumulativeDetectionDataset(
+            root=args.data_path,
+            split="val",
+            T=args.T,
+            input_size=image_size,
+            window_ms=args.window_ms,
+            max_samples=args.max_val_samples,
+            max_sequences=args.max_val_sequences,
+            verbose=True,
+        )
     elif args.dataset == "detrac":
         dataset_train = DETRACDetectionDataset(
             root=args.data_path,
