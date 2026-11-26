@@ -951,7 +951,7 @@ def main(args):
     best_map50 = -1.0
 
     if args.resume:
-        ckpt = torch.load(args.resume, map_location="cpu",weights_only=True)
+        ckpt = torch.load(args.resume, map_location="cpu",weights_only=False)
 
         model.load_state_dict(ckpt["model"])
         optimizer.load_state_dict(ckpt["optimizer"])
