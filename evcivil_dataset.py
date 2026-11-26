@@ -93,7 +93,7 @@ class EVCivilDetectionDataset(Dataset):
             raise RuntimeError("No detection samples found. Check dataset root and label files.")
 
     def _collect_sequences(self) -> List[Dict]:
-        label_files = sorted(self.root.rglob("*_label.npy"))
+        label_files = sorted(self.root.rglob("*_label.npy",recurse_symlinks=True))
 
         items = []
         for label_path in label_files:
