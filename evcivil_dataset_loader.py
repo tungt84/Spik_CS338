@@ -2,6 +2,7 @@
 import torch
 
 from evcivil_dataset import EVCivilDetectionDataset
+from evcivil_dataset import EVCivilCumulativeDetectionDataset
 
 
 def xyxy_to_cxcywh(boxes: torch.Tensor) -> torch.Tensor:
