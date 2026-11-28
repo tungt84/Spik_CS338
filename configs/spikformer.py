@@ -4,7 +4,7 @@ CONFIG = {
     "output_dir": "./logs_evcivil_det_yolox_new_window60_1",
 
     "device": "cuda:0",
-    "epochs": 15,
+    "epochs": 23,
     "batch_size": 8,
     "workers": 2,
 
